@@ -39,6 +39,7 @@ public class BookController {
         List<Book> booksByAuthor = bookService.listBooksByAuthorId(authorId);
 
         model.addAttribute("books", booksByAuthor);
+        model.addAttribute("authors", authorService.listAuthors());
 
         return "listBooks";
     }
@@ -49,6 +50,7 @@ public class BookController {
         List<Book> booksByRating = bookService.listBooksByRating(rating);
 
         model.addAttribute("books", booksByRating);
+        model.addAttribute("authors", authorService.listAuthors());
 
         return "listBooks";
     }
