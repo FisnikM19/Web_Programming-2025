@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Book Reservation - Welcome and choose a Book</title>
@@ -130,10 +130,21 @@
 <main>
     <div class="header-actions">
         <h2>Books Library</h2>
-        <div class="action-buttons">
+        <div class="action-buttons" sec:authorize="hasRole('ADMIN')">
             <a href="/books/book-form" class="btn btn-success">Add New Book</a>
             <a href="/authors" class="btn btn-primary">Manage Authors</a>
         </div>
+
+        <!-- Login/Logout -->
+        <span sec:authorize="isAuthenticated()">
+            <span style="margin-right: 10px;">Welcome, <span sec:authentication="name"></span>!</span>
+            <form method="post" th:action="@{/logout}" style="display: inline;">
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </span>
+        <span sec:authorize="isAnonymous()">
+            <a th:href="@{/login}" class="btn btn-primary">Login</a>
+        </span>
     </div>
 
     <!-- Filter by Author -->
@@ -173,7 +184,7 @@
                        required>
                 <span th:text="'Title: ' + ${book.title} + ', Genre: ' + ${book.genre} + ', Rating: ' + ${book.averageRating} + ', Author: ' + ${book.author.name} + ' ' + ${book.author.surname}"></span>
             </label>
-            <div class="book-actions">
+            <div class="book-actions" sec:authorize="hasRole('ADMIN')">
                 <a th:href="@{/books/book-form/{id}(id=${book.id})}" class="btn btn-primary">Edit</a>
                 <form th:action="@{/books/delete/{id}(id=${book.id})}" method="POST" style="display:inline;">
                     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this book?')">Delete</button>
