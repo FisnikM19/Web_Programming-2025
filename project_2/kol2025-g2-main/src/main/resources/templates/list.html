@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Ski Slope List</title>
 </head>
@@ -7,25 +7,33 @@
 
 <div>
     <!-- The form below should invoke the method SkiSlopeController.listAll -->
-    <form id="filter-form">
+    <form id="filter-form" th:action="@{/ski-slopes}" th:method="GET">
         <label for="name">Slope Name</label>
-        <input id="name" type="text" name=""/>
+        <input id="name" type="text" name="name" th:value="${name}"/>
 
         <label for="length">Slope Length (in meters)</label>
-        <input id="length" type="number" name=""/>
+        <input id="length" type="number" name="length" th:value="${length}"/>
 
         <label for="difficulty">Slope Difficulty</label>
-        <select id="difficulty" name="">
+        <select id="difficulty" name="difficulty">
             <option value="">All</option>
             <!-- For each SlopeDifficulty you should have one <option> like below  -->
-            <option>[slopeDifficulty]</option>
+            <option th:each="diff : ${difficulties}"
+                    th:value="${diff}"
+                    th:text="${diff}"
+                    th:selected="${difficulty != null && difficulty == diff}">
+            </option>
         </select>
 
         <label for="skiResort">Ski Resort</label>
-        <select id="skiResort" name="">
+        <select id="skiResort" name="skiResort">
             <option value="">All</option>
             <!-- For each ski resort you should have one <option> like below  -->
-            <option>[skiResort.name]</option>
+            <option th:each="sR: ${skiResorts}"
+                    th:value="${sR.getId()}"
+                    th:text="${sR.getName()}"
+                    th:selected="${skiResortId != null && skiResortId == sR.getId()}">
+            </option>
         </select>
 
         <button id="filter" type="submit">Filter</button>
@@ -46,11 +54,11 @@
             <th>Actions</th>
         </tr>
         <!-- For each ski slope you should have one <tr> like below -->
-        <tr class="item">
-            <td>[slope.name]</td>
-            <td>[slope.length]</td>
-            <td>[slope.difficulty]</td>
-            <td>[slope.skiResort.name]</td>
+        <tr class="item" th:each="slope: ${page.getContent()}">
+            <td th:text="${slope.name}">[slope.name]</td>
+            <td th:text="${slope.length}">[slope.length]</td>
+            <td th:text="${slope.difficulty.name()}">[slope.difficulty]</td>
+            <td th:text="${slope.skiResort.name}">[slope.skiResort.name]</td>
             <td>[slope.closed] -> OPEN/CLOSED</td>
             <td>
                 <!-- SkiSlopeController.edit -->

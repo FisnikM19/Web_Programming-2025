@@ -1,16 +1,24 @@
 package mk.ukim.finki.wp.kol2025g2.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class SkiSlope {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private Integer length;
     private SlopeDifficulty difficulty;
+
+    @ManyToOne
     private SkiResort skiResort;
 
     private boolean closed = false;

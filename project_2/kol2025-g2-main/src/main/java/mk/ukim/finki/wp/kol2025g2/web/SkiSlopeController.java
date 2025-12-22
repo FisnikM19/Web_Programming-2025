@@ -1,8 +1,24 @@
 package mk.ukim.finki.wp.kol2025g2.web;
 
+import lombok.AllArgsConstructor;
+import mk.ukim.finki.wp.kol2025g2.model.SkiSlope;
 import mk.ukim.finki.wp.kol2025g2.model.SlopeDifficulty;
+import mk.ukim.finki.wp.kol2025g2.service.SkiResortService;
+import mk.ukim.finki.wp.kol2025g2.service.SkiSlopeService;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+@Controller
+@AllArgsConstructor
+@RequestMapping({"/", "/ski-slopes"})
 public class SkiSlopeController {
+
+    private final SkiSlopeService skiSlopeService;
+    private final SkiResortService skiResortService;
 
     /**
      * This method should use the "list.html" template to display all ski slopes.
@@ -20,8 +36,27 @@ public class SkiSlopeController {
      * @param pageSize   The number of items per page
      * @return The view "list.html".
      */
-    public String listAll(String name, Integer length, SlopeDifficulty difficulty, Long skiResort, Integer pageNum, Integer pageSize) {
-        return "";
+    @GetMapping()
+    public String listAll(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer length,
+            @RequestParam(required = false) SlopeDifficulty difficulty,
+            @RequestParam(required = false) Long skiResort,
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            Model model
+    ) {
+        Page<SkiSlope> skiSlopes = skiSlopeService.findPage(name, length, difficulty, skiResort, pageNum - 1, pageSize);
+        model.addAttribute("page", skiSlopes);
+
+        model.addAttribute("name", name);
+        model.addAttribute("length", length);
+        model.addAttribute("difficulty", difficulty);
+        model.addAttribute("skiResortId", skiResort);
+
+        model.addAttribute("skiResorts", this.skiResortService.listAll());
+        model.addAttribute("difficulties", SlopeDifficulty.values());
+        return "list";
     }
 
     /**
