@@ -8,10 +8,7 @@ import mk.ukim.finki.wp.kol2025g2.service.SkiSlopeService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @AllArgsConstructor
@@ -47,8 +44,8 @@ public class SkiSlopeController {
             @RequestParam(defaultValue = "10") Integer pageSize,
             Model model
     ) {
-        Page<SkiSlope> skiSlopes = skiSlopeService.findPage(name, length, difficulty, skiResort, pageNum - 1, pageSize);
-        model.addAttribute("page", skiSlopes);
+        Page<SkiSlope> skiSlopesPage = skiSlopeService.findPage(name, length, difficulty, skiResort, pageNum - 1, pageSize);
+        model.addAttribute("page", skiSlopesPage);
 
         model.addAttribute("name", name);
         model.addAttribute("length", length);
@@ -80,8 +77,16 @@ public class SkiSlopeController {
      *
      * @return The view "form.html".
      */
-    public String showEdit(Long id) {
-        return "";
+    @GetMapping("/edit/{id}")
+    public String showEdit(@PathVariable Long id, Model model) {
+        //NOTE: THIS SHOULD BE SAME AS:
+        // form.html:
+        // th:action="@{${slope == null ? '/ski-slopes' : '/ski-slopes/' + slope.id}}"
+        //th:value="${slope != null ? slope.getName() : ''}"
+        model.addAttribute("slope", skiSlopeService.findById(id)); // this is why the attribute we put as slope!!!
+        model.addAttribute("difficulties", SlopeDifficulty.values());
+        model.addAttribute("skiResorts", skiResortService.listAll());
+        return "form";
     }
 
     /**
@@ -110,8 +115,16 @@ public class SkiSlopeController {
      *
      * @return The view "list.html".
      */
-    public String update(Long id, String name, Integer length, SlopeDifficulty difficulty, Long skiResort) {
-        return "";
+    @PostMapping("/{id}")
+    public String update(
+            @PathVariable Long id,
+            @RequestParam String name,
+            @RequestParam Integer length,
+            @RequestParam SlopeDifficulty difficulty,
+            @RequestParam Long skiResort
+    ) {
+        skiSlopeService.update(id, name, length, difficulty, skiResort);
+        return "redirect:/ski-slopes";
     }
 
     /**
@@ -121,8 +134,10 @@ public class SkiSlopeController {
      *
      * @return The view "list.html".
      */
-    public String delete(Long id) {
-        return "";
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        skiSlopeService.delete(id);
+        return "redirect:/ski-slopes";
     }
 
     /**
@@ -133,8 +148,10 @@ public class SkiSlopeController {
      * @param id The ID of the ski slope to close.
      * @return The view "list.html".
      */
-    public String close(Long id) {
-        return "";
+    @PostMapping("/close/{id}")
+    public String close(@PathVariable Long id) {
+        skiSlopeService.close(id);
+        return "redirect:/ski-slopes";
     }
 
 }

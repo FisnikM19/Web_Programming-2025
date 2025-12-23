@@ -72,7 +72,7 @@ public class SkiSlopeServiceImpl implements SkiSlopeService {
     public SkiSlope close(Long id) {
         SkiSlope skiSlope = findById(id);
         skiSlope.setClosed(true);
-        return skiSlope;
+        return skiSlopeRepository.save(skiSlope);
     }
 
     @Override

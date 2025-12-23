@@ -62,15 +62,15 @@
             <td th:text="${slope.closed ? 'CLOSED' : 'OPEN'}">[slope.closed] -> OPEN/CLOSED</td>
             <td>
                 <!-- SkiSlopeController.edit -->
-                <a class="edit-item">Edit</a>
+                <a th:href="@{'/ski-slopes/edit/{id}' (id=${slope.id})}" class="edit-item">Edit</a>
 
                 <!-- SkiSlopeController.delete -->
-                <form>
+                <form th:action="@{'/ski-slopes/delete/{id}' (id=${slope.id})}" method="post">
                     <button type="submit" class="delete-item">Delete</button>
                 </form>
 
                 <!-- SkiSlopeController.close -->
-                <form>
+                <form th:action="@{'/ski-slopes/close/{id}' (id=${slope.id})}" method="post">
                     <button type="submit" class="close-item">Close</button>
                 </form>
             </td>
