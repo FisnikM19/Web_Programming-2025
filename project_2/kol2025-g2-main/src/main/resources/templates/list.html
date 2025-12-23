@@ -41,7 +41,7 @@
 
     <div>
         <!-- SkiSlopeController.showAdd -->
-        <a href="" class="add-item">Add new ski slope</a>
+        <a th:href="@{/ski-slopes/add}" class="add-item">Add new ski slope</a>
     </div>
 
     <table>
@@ -59,7 +59,7 @@
             <td th:text="${slope.length}">[slope.length]</td>
             <td th:text="${slope.difficulty.name()}">[slope.difficulty]</td>
             <td th:text="${slope.skiResort.name}">[slope.skiResort.name]</td>
-            <td>[slope.closed] -> OPEN/CLOSED</td>
+            <td th:text="${slope.closed ? 'CLOSED' : 'OPEN'}">[slope.closed] -> OPEN/CLOSED</td>
             <td>
                 <!-- SkiSlopeController.edit -->
                 <a class="edit-item">Edit</a>
@@ -76,6 +76,7 @@
             </td>
         </tr>
     </table>
+    <div th:include="paging :: pageSection(${page})"></div>
 
 </div>
 <div>

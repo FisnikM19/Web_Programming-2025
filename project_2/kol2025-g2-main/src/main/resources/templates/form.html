@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Ski Slope Form</title>
 </head>
 <body>
 <!-- The form should submit to SkiSlopeController.create or SkiSlopeController.update,
      depending on whether we are creating or editing a ski slope -->
-<form>
+<form method="post" th:action="@{${slope == null ? '/ski-slopes' : '/ski-slopes/' + slope.id}}">
     <div>
         <label for="name">Slope Name</label>
         <input type="text"
                id="name"
-               name=""
+               name="name"
+               th:value="${slope != null ? slope.getName() : ''}"
                required>
     </div>
 
@@ -19,23 +20,32 @@
         <label for="length">Slope Length (in meters)</label>
         <input type="number"
                id="length"
-               name=""
+               name="length"
+               th:value="${slope?.length}"
                required>
     </div>
 
     <div>
         <label for="difficulty">Slope Difficulty</label><br/>
-        <select id="difficulty" name="" size="5" required>
+        <select id="difficulty" name="difficulty" size="5" required>
             <!-- For each SlopeDifficulty you should have one <option> like below  -->
-            <option>[slopeDifficulty]</option>
+            <option th:each="diff: ${difficulties}"
+                    th:text="${diff}"
+                    th:value="${diff}"
+                    th:selected="${slope?.difficulty == diff}">[slopeDifficulty]
+            </option>
         </select>
     </div>
 
     <div>
         <label for="skiResort">Ski Resort</label><br/>
-        <select id="skiResort" name="" required size="5">
+        <select id="skiResort" name="skiResort" required size="5">
             <!-- For each ski resort you should have one <option> like below  -->
-            <option>[skiResort.name]</option>
+            <option th:each="resort: ${skiResorts}"
+                    th:text="${resort.name}"
+                    th:value="${resort.id}"
+                    th:selected="${slope?.skiResort?.id == resort.id}">[skiResort.name]
+            </option>
         </select>
     </div>
 

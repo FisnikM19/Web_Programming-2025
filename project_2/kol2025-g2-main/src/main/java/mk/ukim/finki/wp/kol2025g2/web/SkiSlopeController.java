@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -65,8 +66,11 @@ public class SkiSlopeController {
      *
      * @return The view "form.html".
      */
-    public String showAdd() {
-        return "";
+    @GetMapping("/add")
+    public String showAdd(Model model) {
+        model.addAttribute("difficulties", SlopeDifficulty.values());
+        model.addAttribute("skiResorts", skiResortService.listAll());
+        return "form";
     }
 
     /**
@@ -87,8 +91,16 @@ public class SkiSlopeController {
      *
      * @return The view "list.html".
      */
-    public String create(String name, Integer length, SlopeDifficulty difficulty, Long skiResort) {
-        return "";
+    @PostMapping
+    public String create(
+            @RequestParam String name,
+            @RequestParam Integer length,
+            @RequestParam SlopeDifficulty difficulty,
+            @RequestParam Long skiResort
+    ) {
+
+        skiSlopeService.create(name, length, difficulty, skiResort);
+        return "redirect:/ski-slopes";
     }
 
     /**
