@@ -39,7 +39,7 @@
         <button id="filter" type="submit">Filter</button>
     </form>
 
-    <div>
+    <div sec:authorize="hasRole('ADMIN')">
         <!-- SkiSlopeController.showAdd -->
         <a th:href="@{/ski-slopes/add}" class="add-item">Add new ski slope</a>
     </div>
@@ -60,7 +60,7 @@
             <td th:text="${slope.difficulty.name()}">[slope.difficulty]</td>
             <td th:text="${slope.skiResort.name}">[slope.skiResort.name]</td>
             <td th:text="${slope.closed ? 'CLOSED' : 'OPEN'}">[slope.closed] -> OPEN/CLOSED</td>
-            <td>
+            <td sec:authorize="hasRole('ADMIN')">
                 <!-- SkiSlopeController.edit -->
                 <a th:href="@{'/ski-slopes/edit/{id}' (id=${slope.id})}" class="edit-item">Edit</a>
 
@@ -70,7 +70,8 @@
                 </form>
 
                 <!-- SkiSlopeController.close -->
-                <form th:action="@{'/ski-slopes/close/{id}' (id=${slope.id})}" method="post">
+                <!-- only show if slope is NOT closed (i.e., open) -->
+                <form th:if="${!slope.closed}" th:action="@{'/ski-slopes/close/{id}' (id=${slope.id})}" method="post">
                     <button type="submit" class="close-item">Close</button>
                 </form>
             </td>

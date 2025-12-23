@@ -79,7 +79,7 @@ public class SkiSlopeServiceImpl implements SkiSlopeService {
     public Page<SkiSlope> findPage(String name, Integer length, SlopeDifficulty difficulty, Long skiResort, int pageNum, int pageSize) {
         Specification<SkiSlope> specification = Specification.allOf(
                 filterContainsText(SkiSlope.class, "name", name),
-                filterEqualsV(SkiSlope.class, "length", length),
+                greaterThan(SkiSlope.class, "length", length),
                 filterEqualsV(SkiSlope.class, "difficulty", difficulty),
                 filterEquals(SkiSlope.class, "skiResort.id", skiResort)
         );
